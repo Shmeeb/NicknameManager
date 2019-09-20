@@ -29,9 +29,9 @@ public class UltimateChatListener implements EventListener<SendChannelMessageEve
             Optional<String> nickname = nicknameData.getNickname();
 
             if (nickname.isPresent())
-                event.addTag("{Nickname}", nickname.get() + TextSerializers.FORMATTING_CODE.getCharacter() + "r");
+                event.addTag("{Nickname}", nickname.get());
             else
-                event.addTag("{Nickname}", event.getSender().getName() + TextSerializers.FORMATTING_CODE.getCharacter() + "r");
+                event.addTag("{Nickname}", event.getSender().getName());
         }
     }
 }

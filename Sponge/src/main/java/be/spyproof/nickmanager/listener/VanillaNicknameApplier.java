@@ -44,7 +44,7 @@ public class VanillaNicknameApplier
             Text header = event.getFormatter().getHeader().format();
             String rawHeader = TextSerializers.FORMATTING_CODE.serialize(header);
             if (rawHeader.contains(player.getName()))
-                rawHeader = rawHeader.replace(player.getName(), nicknameData.getNickname().get() + "&r");
+                rawHeader = rawHeader.replace(player.getName(), nicknameData.getNickname().get());
 
             builder.append(Text.of(TextSerializers.FORMATTING_CODE.deserialize(rawHeader)));
 

@@ -18,7 +18,7 @@ import org.spongepowered.api.entity.living.player.Player;
 /**
  * Created by Spyproof on 28/10/2016.
  */
-public class SetNickCmd extends AbstractCmd implements IPlayerCmd, IArgumentChecker, IBlacklistChecker, ICooldownChecker, IFormatChecker, ILengthChecker, ITokenChecker
+public class SetNickCmd extends AbstractCmd implements IPlayerCmd, IArgumentChecker, IBlacklistChecker, ICooldownChecker, IFormatChecker, ILengthChecker, ITokenChecker, IMagicChecker
 {
     private static final String ARG = "nickname";
 
@@ -38,6 +38,7 @@ public class SetNickCmd extends AbstractCmd implements IPlayerCmd, IArgumentChec
         checkBlacklist(src, nick);
         checkFormat(src, nick);
         checkLength(nick);
+        checkMagic(src, nick);
 
         // Apply
         nicknameData.setNickname(nick);

@@ -13,7 +13,7 @@
         <module>Core</module>
         <module>Sponge</module>
         <module>Performance-Test</module>
-        <module>Bukkit</module>
+<!--        <module>Bukkit</module>-->
     </modules>
 
     <build>

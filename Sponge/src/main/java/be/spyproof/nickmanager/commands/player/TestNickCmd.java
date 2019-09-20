@@ -2,10 +2,7 @@ package be.spyproof.nickmanager.commands.player;
 
 import be.spyproof.nickmanager.commands.AbstractCmd;
 import be.spyproof.nickmanager.commands.argument.OldNicknameArg;
-import be.spyproof.nickmanager.commands.checks.IArgumentChecker;
-import be.spyproof.nickmanager.commands.checks.IBlacklistChecker;
-import be.spyproof.nickmanager.commands.checks.IFormatChecker;
-import be.spyproof.nickmanager.commands.checks.ILengthChecker;
+import be.spyproof.nickmanager.commands.checks.*;
 import be.spyproof.nickmanager.controller.ISpongeNicknameController;
 import be.spyproof.nickmanager.controller.MessageController;
 import be.spyproof.nickmanager.util.Reference;
@@ -20,7 +17,7 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 /**
  * Created by Spyproof on 28/10/2016.
  */
-public class TestNickCmd extends AbstractCmd implements IPlayerCmd, IBlacklistChecker, IFormatChecker, ILengthChecker, IArgumentChecker
+public class TestNickCmd extends AbstractCmd implements IPlayerCmd, IBlacklistChecker, IFormatChecker, ILengthChecker, IArgumentChecker, IMagicChecker
 {
     private static final String ARG = "nickname";
 
@@ -37,6 +34,7 @@ public class TestNickCmd extends AbstractCmd implements IPlayerCmd, IBlacklistCh
         checkBlacklist(src, nick);
         checkFormat(src, nick);
         checkLength(nick);
+        checkMagic(src, nick);
 
         src.sendMessage(this.getMessageController().getMessage(Reference.SuccessMessages.NICK_PREVIEW).apply(TemplateUtils.getParameters("nickname", TextSerializers.FORMATTING_CODE.deserialize(nick))).build());
 
