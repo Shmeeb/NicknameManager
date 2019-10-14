@@ -4,6 +4,8 @@ import be.spyproof.nickmanager.commands.IMessageControllerHolder;
 import be.spyproof.nickmanager.util.*;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +44,10 @@ public interface IFormatChecker extends IMessageControllerHolder
             while (iterator.hasNext())
                 if (src.hasPermission(Reference.Permissions.STYLE_PREFIX + iterator.next().name().toLowerCase()))
                     iterator.remove();
+        }
+
+        if (nickname.endsWith("&l")) {
+            throw new CommandException(Text.of(TextColors.RED, "Your nickname may not end with &l!"));
         }
 
         if (colours.size() + styles.size() > 0)
