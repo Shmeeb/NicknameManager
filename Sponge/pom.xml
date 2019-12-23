@@ -27,6 +27,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.rojo8399</groupId>
+            <artifactId>PlaceholderAPI</artifactId>
+            <version>v4.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>br.net.fabiozumbi12.UltimateChat</groupId>
             <artifactId>UltimateChat-Sponge-5.0-6.0</artifactId>
             <version>1.8.6</version>
@@ -45,6 +52,10 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
         <repository>
             <id>ultimatechat-repo</id>

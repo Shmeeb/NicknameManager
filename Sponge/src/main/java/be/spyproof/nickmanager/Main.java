@@ -10,20 +10,32 @@ import be.spyproof.nickmanager.da.config.IConfigStorage;
 import be.spyproof.nickmanager.listener.PlayerListener;
 import be.spyproof.nickmanager.listener.UltimateChatListener;
 import be.spyproof.nickmanager.listener.VanillaNicknameApplier;
+import be.spyproof.nickmanager.model.NicknameData;
 import be.spyproof.nickmanager.util.Reference;
 import be.spyproof.nickmanager.util.SpongeUtils;
+import be.spyproof.nickmanager.util.TextUtils;
 import com.google.inject.Inject;
+import me.rojo8399.placeholderapi.Placeholder;
+import me.rojo8399.placeholderapi.PlaceholderService;
+import me.rojo8399.placeholderapi.Source;
+import me.rojo8399.placeholderapi.Token;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.*;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Spyproof on 28/10/2016.
@@ -44,6 +56,7 @@ public class Main
     private ISpongeNicknameController playerController;
     private IConfigStorage configController;
     private MessageController messageController;
+    public static PlaceholderService placeholderService;
 
     /**
      * During this event, all configs are are being read and initialised all local variables
@@ -85,40 +98,43 @@ public class Main
         SpongeUtils.initInstance(playerController, configController);
     }
 
-    /**
-     * During this event, all event listeners are registered
-     * @param event the fired event
-     */
+    @Listener
+    public void aboutToStart(GameAboutToStartServerEvent e) {
+        placeholderService = Sponge.getServiceManager().provide(PlaceholderService.class).get();
+
+        placeholderService.loadAll(this, this).stream().map(builder -> {
+            switch (builder.getId()) {
+                case "nickmanager":
+                    return builder.tokens("nick").description("Gets the players nick data");
+            }
+            return builder;
+        }).map(builder -> builder.author("Shmeeb")).forEach(builder -> {
+            try {
+                builder.buildAndRegister();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
     @Listener
     public void onInit(GameInitializationEvent event)
     {
         registerListeners();
     }
 
-    /**
-     * During this event, all services are registered
-     * @param event the fired event
-     */
     @Listener
     public void onPostInit(GamePostInitializationEvent event)
     {
         registerServices();
     }
 
-    /**
-     * During this event, all commands are registered
-     * @param event the fired event
-     */
     @Listener
     public void onServerStart(GameStartingServerEvent event)
     {
         registerCommands();
     }
 
-    /**
-     * During this event, everything that needs to be closed will do so.
-     * @param event the fired event
-     */
     @Listener
     public void onServerStop(GameStoppingEvent event)
     {
@@ -132,17 +148,11 @@ public class Main
         }
     }
 
-    /**
-     * Register the services to sponge service manager
-     */
     private void registerServices()
     {
         Sponge.getServiceManager().setProvider(this, ISpongeNicknameController.class, this.playerController);
     }
 
-    /**
-     * Register all events
-     */
     private void registerListeners()
     {
         Sponge.getGame().getEventManager().registerListeners(this, new VanillaNicknameApplier(this.playerController));
@@ -157,9 +167,6 @@ public class Main
         {}
     }
 
-    /**
-     * Register all commands
-     */
     private void registerCommands()
     {
         Sponge.getCommandManager().register(this, AcceptRulesCmd.getCommandSpec(this.messageController, this.playerController), Reference.CommandKeys.ACCEPT_RULES);
@@ -202,4 +209,17 @@ public class Main
         Sponge.getCommandManager().register(this, adminCmd, "admnick", "adminnick", "adminnickname");
     }
 
+    @Placeholder(id = "nickmanager")
+    public Text nickmanager(@Source Player source, @Token String token) {
+        NicknameData nicknameData = playerController.wrapPlayer(source);
+        Optional<String> nickname = nicknameData.getNickname();
+
+        if (!token.equalsIgnoreCase("nick")) return Text.EMPTY;
+
+        if (nickname.isPresent()) {
+            return TextUtils.getText(nickname.get());
+        } else {
+            return Text.of(source.getName());
+        }
+    }
 }

@@ -6,6 +6,7 @@ import org.spongepowered.api.text.action.HoverAction;
 import org.spongepowered.api.text.action.ShiftClickAction;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextStyle;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -116,5 +117,13 @@ public class TextUtils {
     }
 
     return parts;
+  }
+
+  public static String color(String string) {
+    return TextSerializers.FORMATTING_CODE.serialize(Text.of(string));
+  }
+
+  public static Text getText(String message) {
+    return TextSerializers.FORMATTING_CODE.deserialize(color(message));
   }
 }
