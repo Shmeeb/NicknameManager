@@ -46,7 +46,10 @@ import java.util.stream.Collectors;
         version = Reference.MetaData.VERSION,
         description = Reference.MetaData.DESCRIPTIONS,
         authors = {"TPNils"},
-        dependencies = @Dependency(id="ultimatechat", optional=true))
+        dependencies = {
+                @Dependency(id="ultimatechat", optional=true),
+                @Dependency(id="placeholderapi", optional=true)
+        })
 public class Main
 {
     @Inject
