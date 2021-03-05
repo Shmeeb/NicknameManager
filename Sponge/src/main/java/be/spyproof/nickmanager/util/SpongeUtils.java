@@ -34,6 +34,14 @@ public class SpongeUtils
         INSTANCE = new SpongeUtils(playerController, configController);
     }
 
+    public static Text getText(String message) {
+        return TextSerializers.FORMATTING_CODE.deserialize(color(message));
+    }
+
+    public static String color(String string) {
+        return TextSerializers.FORMATTING_CODE.serialize(Text.of(string));
+    }
+
     private SpongeUtils(ISpongeNicknameController playerController, IConfigStorage configController)
     {
         this.playerController = playerController;
